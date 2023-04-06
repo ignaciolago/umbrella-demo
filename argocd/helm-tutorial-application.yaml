@@ -1,16 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: helm-umbrella
+  name: umbrella-demo
+  namespace: openshift-gitops
 spec:
   destination:
     name: ''
     namespace: ''
     server: 'https://kubernetes.default.svc'
   source:
-    path: nginx-chart
-    repoURL: 'https://github.com/automationiberia/library-demo.git'
-    targetRevision: nacho
+    path: environments/test
+    repoURL: 'https://github.com/ignaciolago/umbrella-demo.git'
+    targetRevision: HEAD
     helm:
       valueFiles:
         - values.yaml
@@ -20,4 +21,5 @@ spec:
     automated:
       prune: true
       selfHeal: true
-    syncOptions: []
+    syncOptions:
+      - PruneLast=true
