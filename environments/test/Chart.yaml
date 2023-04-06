@@ -6,6 +6,6 @@ type: application
 version: 0.1.1
 dependencies:
   - name: frontend-nginx
-    version: "^0.1.x"
+    version: "^0.1"
     repository: "https://automationiberia.github.io/helm-demo/"
 ...
