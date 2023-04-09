@@ -18,4 +18,10 @@ frontend-nginx:
 
   env:
     name: test
+
+global:
+  cluster:
+    ocp: true
+    aws: false
+    aro: false    
 ...
