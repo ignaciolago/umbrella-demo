@@ -21,7 +21,7 @@ frontend-nginx:
 
 global:
   cluster:
-    ocp: true
-    aws: false
+    ocp: false
+    aws: true
     aro: false    
 ...
