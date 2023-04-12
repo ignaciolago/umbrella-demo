@@ -1,25 +1,46 @@
 apiVersion: argoproj.io/v1alpha1
-kind: Application
+kind: ApplicationSet
 metadata:
-  name: umbrella-demo
+  name: test
   namespace: openshift-gitops
 spec:
-  destination:
-    name: ''
-    namespace: ''
-    server: 'https://kubernetes.default.svc'
-  source:
-    path: environments/test
-    repoURL: 'https://github.com/ignaciolago/umbrella-demo.git'
-    targetRevision: HEAD
-    helm:
-      valueFiles:
-        - values.yaml
-  sources: []
-  project: default
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - PruneLast=true
+  generators:
+    - clusterDecisionResource:
+        configMapRef: acm-placement
+        labelSelector:
+          matchLabels:
+            cluster.open-cluster-management.io/placement: test-placement
+        requeueAfterSeconds: 180
+  template:
+    metadata:
+      name: test-{{name}}
+      labels:
+        velero.io/exclude-from-backup: "true"
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/ignaciolago/umbrella-demo.git
+        targetRevision: main
+        path: environments/test
+        helm:
+          valueFiles:
+            - "{{name}}-values.yaml"
+      destination:
+        namespace: openshift-gitops
+        server: "{{server}}"
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+        syncOptions:
+          - CreateNamespace=true
+          - PruneLast=true
+---
+apiVersion: cluster.open-cluster-management.io/v1beta1
+kind: Placement
+metadata:
+  name: test-placement
+  namespace: openshift-gitops
+spec:
+  clusterSets:
+    - gitops-clusters
