@@ -19,7 +19,7 @@ spec:
     spec:
       project: default
       source:
-        repoURL: https://github.com/ignaciolago/umbrella-demo.git
+        repoURL: https://github.com/automationiberia/helm-child-demo.git
         targetRevision: main
         path: environments/test
         helm:
